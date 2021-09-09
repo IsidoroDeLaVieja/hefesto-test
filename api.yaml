@@ -1,0 +1,47 @@
+key: hefesto-test
+before:
+  CacheDisabled:
+    directive: CacheDisabled
+  PropagateCorrelationId:
+    directive: PropagateCorrelationId
+after: 
+  OnError:
+    directive: OnError
+    groups:
+      - ERROR_FLOW
+  Log:
+    directive: Log
+    groups:
+      - AFTER_FLOW
+endpoints:
+  get /ping:
+    Ping:
+      directive: Ping
+  get /middleware/ping:
+    Pull:
+      directive: Pull
+      host: $.memory.hefesto-localhost
+      path: /hefesto-test/ping
+      target: ping
+  post /job/body:
+    ForTheWorker:
+      directive: ForTheWorker
+      identifier: true
+    WriteResponse:
+      directive: WriteToJob
+      value: test
+  get /globalvars:
+    ShowGlobalVars:
+      directive: ShowGlobalVars
+  get /pingandcookie:
+    CreateCookie:
+      directive: CreateCookie
+    Ping:
+      directive: Ping
+  get /middleware/pingandcookie:
+    Pull:
+      directive: Pull
+      host: $.memory.hefesto-localhost
+      path: /hefesto-test/pingandcookie
+      target: ping
+
